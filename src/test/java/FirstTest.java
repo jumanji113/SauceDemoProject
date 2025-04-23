@@ -1,11 +1,11 @@
 
+import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static com.codeborne.selenide.Selenide.$x;
-import static com.codeborne.selenide.Selenide.open;
+import static com.codeborne.selenide.Selenide.*;
 import static org.apache.commons.lang3.StringUtils.split;
 
 public class FirstTest extends BaseTest{
@@ -40,14 +40,23 @@ public class FirstTest extends BaseTest{
 
         //добавление товара Sauce Labs Backpack в корзину
         $x("//button[@id='add-to-cart-sauce-labs-backpack']").click();
+        //добавление товара Sauce Labs Bike Light в корзину
+        $x("//button[@data-test='add-to-cart-sauce-labs-bike-light']").click();
 
         Thread.sleep(3000);
         String actualCartItem = $x("//span[@data-test='shopping-cart-badge']").getText();
-        String i = "1";
+        String i = "2";
         Assertions.assertEquals(i, actualCartItem);
         String expectedTextButton = "Remove";
         String removeButton = $x("//button[@data-test='remove-sauce-labs-backpack']").getText();
         Assertions.assertEquals(removeButton, expectedTextButton);
 
+
+        $x("//a[@class='shopping_cart_link']").click();
+        //Получаем список товаров из корзины
+        ElementsCollection cartItems = $$x("//div[@class='cart_item']");
+        //Проверяем, что кол-во элементов равно 2
+        Assertions.assertTrue(cartItems.size() == 2);
+        Thread.sleep(3000);
     }
 }
