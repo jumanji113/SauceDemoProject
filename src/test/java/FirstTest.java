@@ -1,4 +1,5 @@
 
+import com.codeborne.selenide.SelenideElement;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,8 +24,8 @@ public class FirstTest extends BaseTest{
         String fullPass = $x("//div[@data-test='login-password']").getText();
         //разделяем его на нужный логин
         String pass = fullPass.split("\n")[1].trim();
-        //Assertions.assertEquals(expectedLogin, login);
-        //Assertions.assertEquals(expectedPass, pass);
+        Assertions.assertEquals(expectedLogin, login);
+        Assertions.assertEquals(expectedPass, pass);
 
         //получаем инпут логина и вводим полученое значение выше
         $x("//input[@id='user-name']").setValue(login);
@@ -33,5 +34,20 @@ public class FirstTest extends BaseTest{
 
         //после ввода значений, нажимаем кнопку входа
         $x("//input[@id='login-button']").click();
+
+        String logo = $x("//div[@class='app_logo']").getText().trim();
+        Assertions.assertEquals(logo, "Swag Labs");
+
+        //добавление товара Sauce Labs Backpack в корзину
+        $x("//button[@id='add-to-cart-sauce-labs-backpack']").click();
+
+        Thread.sleep(3000);
+        String actualCartItem = $x("//span[@data-test='shopping-cart-badge']").getText();
+        String i = "1";
+        Assertions.assertEquals(i, actualCartItem);
+        String expectedTextButton = "Remove";
+        String removeButton = $x("//button[@data-test='remove-sauce-labs-backpack']").getText();
+        Assertions.assertEquals(removeButton, expectedTextButton);
+
     }
 }
