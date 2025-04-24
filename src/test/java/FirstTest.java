@@ -1,6 +1,7 @@
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import constans.ItemConstants;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,10 +13,11 @@ import pages.SignUpPage;
 import static com.codeborne.selenide.Selenide.*;
 import static org.apache.commons.lang3.StringUtils.split;
 
-public class FirstTest extends BaseTest{
+public class FirstTest extends BaseTest implements ItemConstants {
 
     private final static String expectedLogin = "standard_user";
     private final static String expectedPass = "secret_sauce";
+
 
     @Test
     @DisplayName("Вход на страницу, и ввод логина и пароля")
@@ -40,6 +42,17 @@ public class FirstTest extends BaseTest{
 //        //Проверяем, что кол-во элементов равно 2
 //        Assertions.assertEquals(2, cartItems.size());
 //        Thread.sleep(3000);
+    }
+
+    @Test
+    @DisplayName("Проверка работы счетчика")
+    public void checkCounter(){
+        SignUpPage signUpPage = new SignUpPage();
+        signUpPage
+                .setData(expectedLogin, expectedPass)
+                .clickButtonSignUp()
+                .checkCounterCart(ItemConstants.BACKPACK)
+                .checkCounterCart(ItemConstants.BIKE_LIGHT);
     }
 
     @Test
