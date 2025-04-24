@@ -45,15 +45,18 @@ public class FirstTest extends BaseTest implements ItemConstants {
     }
 
     @Test
-    @DisplayName("Проверка работы счетчика")
+    @DisplayName("Проверка работы счетчика корзины")
     public void checkCounter(){
         SignUpPage signUpPage = new SignUpPage();
         signUpPage
                 .setData(expectedLogin, expectedPass)
                 .clickButtonSignUp()
+                .checkInitialStateCart()
                 .checkCounterCart(ItemConstants.BACKPACK)
                 .checkCounterCart(ItemConstants.BIKE_LIGHT);
     }
+
+
 
     @Test
     @DisplayName("Проверка лого")

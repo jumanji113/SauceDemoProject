@@ -1,10 +1,11 @@
 package pages;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
-import yudin.Main;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,29 +33,47 @@ public class MainPage {
         return this;
     }
 
-    @Step("Проверка обновления счетчика корзины")
-    public MainPage checkCounterCart(String shortName){
-        SelenideElement button = itemLocators.get(shortName);
-        int counter = 0;
-        if(button != null){
-            button.click();
-            counter++;
-        } else {
-            throw new IllegalArgumentException("Предмет не найден");
+    @Step("Проверка начального состояния корзины")
+    public MainPage checkInitialStateCart() {
+        if (!actualCartItem.exists()) {
+            System.out.println("Элемент счетчик отсутствует на странице. Продолжение теста...");
+            return this;
         }
-        String actualCounter  = actualCartItem.getText();
-        Assertions.assertEquals(Integer.toString(counter), actualCounter);
+
+        // Если элемент существует, проверяем его текст
+        String initialCounterText = actualCartItem.getText();
+        int initialCounter = initialCounterText.isEmpty() ? 0 : Integer.parseInt(initialCounterText);
+        Assertions.assertEquals(0, initialCounter, "Корзина не пуста перед началом теста");
         return this;
     }
 
-    @Step("Добавление элементов в корзину")
-    public MainPage addItemToCart(String shortName){
+    @Step("Проверка обновления счетчика корзины")
+    public MainPage checkCounterCart(String shortName) {
         SelenideElement button = itemLocators.get(shortName);
-        if(button != null){
-            button.click();
-        } else {
-            throw new IllegalArgumentException("Предмет не найден");
+        if (button == null) {
+            throw new IllegalArgumentException("Элемент не найден");
         }
+        // Проверяем, существует ли счетчик корзины перед добавлением элемента
+        boolean isCounterPresentInitially = actualCartItem.exists();
+        int currentCounter = 0; // Изначально счетчик равен 0
+        // Если счетчик уже существует, получаем его текущее значение
+        if (isCounterPresentInitially) {
+            String currentCounterText = actualCartItem.getText();
+            currentCounter = currentCounterText.isEmpty() ? 0 : Integer.parseInt(currentCounterText);
+        }
+        // Добавляем элемент в корзину
+        button.click();
+        // Ожидаемое значение счетчика
+        int expectedCounter = currentCounter + 1;
+        // Проверяем, что счетчик появился (если его не было изначально)
+        if (!isCounterPresentInitially) {
+            actualCartItem.should(Condition.exist, Duration.ofSeconds(10)); // Ждем появления счетчика
+        }
+        // Получаем актуальное значение счетчика
+        String actualCounterText = actualCartItem.getText();
+        int actualCounter = actualCounterText.isEmpty() ? 0 : Integer.parseInt(actualCounterText);
+        // Проверяем, что счетчик обновился
+        Assertions.assertEquals(expectedCounter, actualCounter, "Счетчик корзины не обновился");
         return this;
     }
 }
