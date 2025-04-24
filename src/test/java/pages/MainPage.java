@@ -10,10 +10,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.codeborne.selenide.Selenide.$x;
+import static com.codeborne.selenide.Selenide.page;
 
 public class MainPage {
     private SelenideElement logo = $x("//div[@class='app_logo']");
     private SelenideElement actualCartItem = $x("//span[@data-test='shopping-cart-badge']");
+    private SelenideElement cartButton = $x("//a[@class='shopping_cart_link']");
 
     private Map<String, SelenideElement> itemLocators = new HashMap<>();
 
@@ -22,8 +24,8 @@ public class MainPage {
         itemLocators.put("bike-light", $x("//button[@id='add-to-cart-sauce-labs-bike-light']"));
         itemLocators.put("bolt-tshirt", $x("//button[@id='add-to-cart-sauce-labs-bolt-t-shirt']"));
         itemLocators.put("fleece-jacket", $x("//button[@id='add-to-cart-sauce-labs-fleece-jacket']"));
-        itemLocators.put("onesie", $x("//div[@id='add-to-cart-sauce-labs-onesie']"));
-        itemLocators.put("t-shirt-red", $x("//div[@id='add-to-cart-test.allthethings()-t-shirt-(red)']"));
+        itemLocators.put("onesie", $x("//button[@id='add-to-cart-sauce-labs-onesie']"));
+        itemLocators.put("t-shirt-red", $x("//button[@id='add-to-cart-test.allthethings()-t-shirt-(red)']"));
     }
 
     @Step("Проверка лого сайта")
@@ -47,7 +49,7 @@ public class MainPage {
         return this;
     }
 
-    @Step("Проверка обновления счетчика корзины")
+    @Step("Обновления счетчика корзины и добавление элементов")
     public MainPage checkCounterCart(String shortName) {
         SelenideElement button = itemLocators.get(shortName);
         if (button == null) {
@@ -75,5 +77,21 @@ public class MainPage {
         // Проверяем, что счетчик обновился
         Assertions.assertEquals(expectedCounter, actualCounter, "Счетчик корзины не обновился");
         return this;
+    }
+
+    @Step("Добавление элементов в корзину без проверки счетчика")
+    public MainPage addItemToCart(String shortName){
+        SelenideElement button = itemLocators.get(shortName);
+        if(button == null){
+            throw new IllegalArgumentException("Элемент не найден");
+        }
+        button.click();
+        return this;
+    }
+
+    @Step
+    public CartPage clickCartButton(){
+        cartButton.click();
+        return page(CartPage.class);
     }
 }
