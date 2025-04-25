@@ -1,6 +1,7 @@
 package yudin.pages;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
@@ -8,9 +9,6 @@ import org.junit.jupiter.api.Assertions;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.codeborne.selenide.Selenide.$x;
-import static com.codeborne.selenide.Selenide.page;
 
 public class MainPage {
 
