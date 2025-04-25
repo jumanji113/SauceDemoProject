@@ -1,4 +1,4 @@
-package pages;
+package yudin.pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
@@ -13,23 +13,24 @@ import static com.codeborne.selenide.Selenide.$x;
 import static com.codeborne.selenide.Selenide.page;
 
 public class MainPage {
-    private SelenideElement logo = $x("//div[@class='app_logo']");
-    private SelenideElement actualCartItem = $x("//span[@data-test='shopping-cart-badge']");
-    private SelenideElement cartButton = $x("//a[@class='shopping_cart_link']");
+
+    private SelenideElement logo = Selenide.$x("//div[@class='app_logo']");
+    private SelenideElement actualCartItem = Selenide.$x("//span[@data-test='shopping-cart-badge']");
+    private SelenideElement cartButton = Selenide.$x("//a[@class='shopping_cart_link']");
 
     private Map<String, SelenideElement> itemLocators = new HashMap<>();
 
     public MainPage() {
-        itemLocators.put("backpack", $x("//button[@id='add-to-cart-sauce-labs-backpack']"));
-        itemLocators.put("bike-light", $x("//button[@id='add-to-cart-sauce-labs-bike-light']"));
-        itemLocators.put("bolt-tshirt", $x("//button[@id='add-to-cart-sauce-labs-bolt-t-shirt']"));
-        itemLocators.put("fleece-jacket", $x("//button[@id='add-to-cart-sauce-labs-fleece-jacket']"));
-        itemLocators.put("onesie", $x("//button[@id='add-to-cart-sauce-labs-onesie']"));
-        itemLocators.put("t-shirt-red", $x("//button[@id='add-to-cart-test.allthethings()-t-shirt-(red)']"));
+        itemLocators.put("backpack", Selenide.$x("//button[@id='add-to-cart-sauce-labs-backpack']"));
+        itemLocators.put("bike-light", Selenide.$x("//button[@id='add-to-cart-sauce-labs-bike-light']"));
+        itemLocators.put("bolt-tshirt", Selenide.$x("//button[@id='add-to-cart-sauce-labs-bolt-t-shirt']"));
+        itemLocators.put("fleece-jacket", Selenide.$x("//button[@id='add-to-cart-sauce-labs-fleece-jacket']"));
+        itemLocators.put("onesie", Selenide.$x("//button[@id='add-to-cart-sauce-labs-onesie']"));
+        itemLocators.put("t-shirt-red", Selenide.$x("//button[@id='add-to-cart-test.allthethings()-t-shirt-(red)']"));
     }
 
     @Step("Проверка лого сайта")
-    public MainPage checkLogo(String expectedLogo){
+    public MainPage checkLogo(String expectedLogo) {
         String actualLogo = logo.getText().trim();
         Assertions.assertEquals(expectedLogo, actualLogo);
         return this;
@@ -80,9 +81,9 @@ public class MainPage {
     }
 
     @Step("Добавление элементов в корзину без проверки счетчика")
-    public MainPage addItemToCart(String shortName){
+    public MainPage addItemToCart(String shortName) {
         SelenideElement button = itemLocators.get(shortName);
-        if(button == null){
+        if (button == null) {
             throw new IllegalArgumentException("Элемент не найден");
         }
         button.click();
@@ -90,8 +91,9 @@ public class MainPage {
     }
 
     @Step
-    public CartPage clickCartButton(){
+    public CartPage clickCartButton() {
         cartButton.click();
-        return page(CartPage.class);
+        return Selenide.page(CartPage.class);
     }
+
 }

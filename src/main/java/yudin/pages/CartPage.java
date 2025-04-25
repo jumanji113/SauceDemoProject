@@ -1,4 +1,4 @@
-package pages;
+package yudin.pages;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
@@ -9,22 +9,20 @@ import static com.codeborne.selenide.Selenide.*;
 
 public class CartPage {
 
-    private ElementsCollection itemsCollections= $$x("//div[@class='cart_item']");
-    private SelenideElement buttonContinue = $x("//button[@id = 'checkout']");
+    private ElementsCollection itemsCollections = Selenide.$$x("//div[@class='cart_item']");
+    private SelenideElement buttonContinue = Selenide.$x("//button[@id = 'checkout']");
 
-
-    @Step("Проверка количества элементов в корзине")
-    public CartPage checkCountItems(Integer expectedSize){
+    @Step("Проверка количества элементов в корзине{expectedSize}")
+    public CartPage checkCountItems(Integer expectedSize) {
         Integer sizeItemCollections = itemsCollections.size();
         Assertions.assertEquals(expectedSize, sizeItemCollections);
         return this;
     }
 
     @Step("Переход на заполнение данных пользователя")
-    public UserInfoForm goToUserInfoPage(){
+    public UserInfoForm goToUserInfoPage() {
         buttonContinue.click();
-        return page(UserInfoForm.class);
+        return Selenide.page(UserInfoForm.class);
     }
-
 
 }
