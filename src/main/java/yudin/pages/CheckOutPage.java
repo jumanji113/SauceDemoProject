@@ -1,4 +1,4 @@
-package pages;
+package yudin.pages;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
@@ -9,11 +9,11 @@ import static com.codeborne.selenide.Selenide.$$x;
 import static com.codeborne.selenide.Selenide.$x;
 
 public class CheckOutPage {
-    private ElementsCollection itemsPriceCollection = $$x("//div[@class='inventory_item_price']");
-    private SelenideElement allTotalSumm = $x("//div[@data-test='subtotal-label']");
+    private ElementsCollection itemsPriceCollection = Selenide.$$x("//div[@class='inventory_item_price']");
+    private SelenideElement allTotalSumm = Selenide.$x("//div[@data-test='subtotal-label']");
 
     @Step("Получение суммы всех предметов в корзине и проверка с итоговой суммой")
-    public CheckOutPage checkSummItems(){
+    public CheckOutPage checkSummItems() {
         int totalSum = itemsPriceCollection.stream()
                 .map(element -> element.getText()) // Получаем текст каждого элемента
                 .mapToInt(text -> {
@@ -24,8 +24,9 @@ public class CheckOutPage {
                     }
                 })
                 .sum();
-        Integer actualTotalSumm  = Integer.parseInt(allTotalSumm.getText().replaceAll("[^0-9]", ""));
+        Integer actualTotalSumm = Integer.parseInt(allTotalSumm.getText().replaceAll("[^0-9]", ""));
         Assertions.assertEquals(totalSum, actualTotalSumm, "суммы не совпадают");
         return this;
     }
+
 }

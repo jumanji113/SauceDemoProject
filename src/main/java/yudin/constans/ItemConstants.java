@@ -1,4 +1,4 @@
-package constans;
+package yudin.constans;
 
 public interface ItemConstants {
     String BACKPACK = "backpack";

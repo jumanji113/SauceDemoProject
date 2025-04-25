@@ -25,12 +25,13 @@ public abstract class BaseTest {
     }
 
     @BeforeEach
-    public void openSite(){
+    public void openSite() {
         open(BASE_URL);
     }
 
     @AfterEach
-    public void tearDown(){
+    public void tearDown() {
         Selenide.closeWebDriver();
     }
+
 }

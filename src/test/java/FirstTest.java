@@ -1,48 +1,52 @@
 
-import constans.ItemConstants;
+import yudin.constans.ItemConstants;
 import lombok.SneakyThrows;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import pages.SignUpPage;
+import yudin.pages.SignUpPage;
 
 public class FirstTest extends BaseTest implements ItemConstants {
 
-    private final static String expectedLogin = "standard_user";
-    private final static String expectedPass = "secret_sauce";
-    private final static String expectedFirstName = "Alexey";
-    private final static String expectedLastName = "Jumanji";
-    private final static int expectedZipCode = 214031;
+    //откорректировал названия final переменных
+    private final static String LOGIN = "standard_user";
+    private final static String PASS = "secret_sauce";
+    private final static String FIRST_NAME = "Alexey";
+    private final static String LAST_NAME = "Jumanji";
+    private final static int ZIP_CODE = 214031;
+    private SignUpPage signUpPage;
 
-
+    //выносим инициализацию отдельно
+    @BeforeEach
+    public void signUpInit() {
+        signUpPage = new SignUpPage();
+    }
 
     @Test
     @DisplayName("Вход на страницу, и ввод логина и пароля")
     @SneakyThrows
     public void openWebsite() {
-        SignUpPage signUpPage = new SignUpPage();
-        signUpPage.assertLoginAndPass(expectedLogin, expectedPass)
-                .setData(expectedLogin, expectedPass)
+        signUpPage.assertLoginAndPass(LOGIN, PASS)
+                .setData(LOGIN, PASS)
                 .clickButtonSignUp();
     }
 
     @Test
     @DisplayName("Проверка лого")
-    public void checkLogo(){
+    public void checkLogo() {
         String expectedLogo = "Swag Labs";
-        SignUpPage signUpPage = new SignUpPage();
         signUpPage
-                .setData(expectedLogin, expectedPass)
+                .setData(LOGIN, PASS)
                 .clickButtonSignUp()
                 .checkLogo(expectedLogo);
     }
 
     @Test
     @DisplayName("Проверка работы счетчика корзины")
-    public void checkCounter(){
-        SignUpPage signUpPage = new SignUpPage();
+    public void checkCounter() {
         signUpPage
-                .setData(expectedLogin, expectedPass)
+                .setData(LOGIN, PASS)
                 .clickButtonSignUp()
                 .checkInitialStateCart()
                 .checkCounterCart(ItemConstants.BACKPACK)
@@ -51,11 +55,10 @@ public class FirstTest extends BaseTest implements ItemConstants {
 
     @Test
     @DisplayName("Проверка работы добавления элементов в корзину и проверка кол-ва элементов в корзине")
-    public void checkAddItemToCart(){
-        SignUpPage signUpPage = new SignUpPage();
+    public void checkAddItemToCart() {
         int expectedSizeCount = 3;
         signUpPage
-                .setData(expectedLogin, expectedPass)
+                .setData(LOGIN, PASS)
                 .clickButtonSignUp()
                 .addItemToCart(ItemConstants.BACKPACK)
                 .addItemToCart(ItemConstants.BIKE_LIGHT)
@@ -66,22 +69,18 @@ public class FirstTest extends BaseTest implements ItemConstants {
 
     @Test
     @DisplayName("Проверка итоговой суммы товаров , а также и других окон, включая ввод данных пользователя")
-    public void checkTotalSumm(){
-        SignUpPage signUpPage = new SignUpPage();
+    public void checkTotalSumm() {
         int expectedSizeCount = 3;
         signUpPage
-                .setData(expectedLogin, expectedPass)
+                .setData(LOGIN, PASS)
                 .clickButtonSignUp()
                 .addItemToCart(ItemConstants.BACKPACK)
                 .addItemToCart(ItemConstants.BIKE_LIGHT)
                 .addItemToCart(ItemConstants.ONESIE)
                 .clickCartButton()
                 .goToUserInfoPage()
-                .setUserInfo(expectedFirstName, expectedLastName, expectedZipCode)
+                .setUserInfo(FIRST_NAME, LAST_NAME, ZIP_CODE)
                 .checkSummItems();
     }
-
-
-
 
 }
