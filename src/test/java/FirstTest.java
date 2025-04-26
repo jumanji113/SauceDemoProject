@@ -1,10 +1,8 @@
-
-import yudin.constans.ItemConstants;
 import lombok.SneakyThrows;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import yudin.constans.ItemEnum;
 import yudin.pages.SignUpPage;
 
 public class FirstTest extends BaseTest implements ItemConstants {
@@ -49,8 +47,8 @@ public class FirstTest extends BaseTest implements ItemConstants {
                 .setData(LOGIN, PASS)
                 .clickButtonSignUp()
                 .checkInitialStateCart()
-                .checkCounterCart(ItemConstants.BACKPACK)
-                .checkCounterCart(ItemConstants.BIKE_LIGHT);
+                .checkCounterCart(ItemEnum.BACKPACK)
+                .checkCounterCart(ItemEnum.FLEECE_JACKET);
     }
 
     @Test
