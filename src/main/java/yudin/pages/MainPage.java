@@ -5,6 +5,7 @@ import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
+import yudin.constans.ItemEnum;
 
 import java.time.Duration;
 import java.util.HashMap;
@@ -16,15 +17,15 @@ public class MainPage {
     private SelenideElement actualCartItem = Selenide.$x("//span[@data-test='shopping-cart-badge']");
     private SelenideElement cartButton = Selenide.$x("//a[@class='shopping_cart_link']");
 
-    private Map<String, SelenideElement> itemLocators = new HashMap<>();
+    private Map<ItemEnum, SelenideElement> itemLocators = new HashMap<>();
 
     public MainPage() {
-        itemLocators.put("backpack", Selenide.$x("//button[@id='add-to-cart-sauce-labs-backpack']"));
-        itemLocators.put("bike-light", Selenide.$x("//button[@id='add-to-cart-sauce-labs-bike-light']"));
-        itemLocators.put("bolt-tshirt", Selenide.$x("//button[@id='add-to-cart-sauce-labs-bolt-t-shirt']"));
-        itemLocators.put("fleece-jacket", Selenide.$x("//button[@id='add-to-cart-sauce-labs-fleece-jacket']"));
-        itemLocators.put("onesie", Selenide.$x("//button[@id='add-to-cart-sauce-labs-onesie']"));
-        itemLocators.put("t-shirt-red", Selenide.$x("//button[@id='add-to-cart-test.allthethings()-t-shirt-(red)']"));
+        itemLocators.put(ItemEnum.BACKPACK, Selenide.$x("//button[@id='add-to-cart-sauce-labs-backpack']"));
+        itemLocators.put(ItemEnum.BIKE_LIGHT, Selenide.$x("//button[@id='add-to-cart-sauce-labs-bike-light']"));
+        itemLocators.put(ItemEnum.BOLT_TSHIRT, Selenide.$x("//button[@id='add-to-cart-sauce-labs-bolt-t-shirt']"));
+        itemLocators.put(ItemEnum.FLEECE_JACKET, Selenide.$x("//button[@id='add-to-cart-sauce-labs-fleece-jacket']"));
+        itemLocators.put(ItemEnum.ONESIE, Selenide.$x("//button[@id='add-to-cart-sauce-labs-onesie']"));
+        itemLocators.put(ItemEnum.T_SHIRT_RED, Selenide.$x("//button[@id='add-to-cart-test.allthethings()-t-shirt-(red)']"));
     }
 
     @Step("Проверка лого сайта")
@@ -49,8 +50,8 @@ public class MainPage {
     }
 
     @Step("Обновления счетчика корзины и добавление элементов")
-    public MainPage checkCounterCart(String shortName) {
-        SelenideElement button = itemLocators.get(shortName);
+    public MainPage checkCounterCart(ItemEnum itemEnum) {
+        SelenideElement button = itemLocators.get(itemEnum);
         if (button == null) {
             throw new IllegalArgumentException("Элемент не найден");
         }
