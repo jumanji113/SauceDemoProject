@@ -4,13 +4,8 @@ import com.codeborne.selenide.logevents.SelenideLogger;
 import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-
-import static com.codeborne.selenide.Selenide.open;
 
 public abstract class BaseTest {
-
-    private final static String BASE_URL = "https://www.saucedemo.com/";
 
     @BeforeAll
     public static void setUp() {
@@ -21,11 +16,6 @@ public abstract class BaseTest {
         Configuration.browserSize = "1920x1080";
         Configuration.timeout = 10000;
         Configuration.screenshots = true;
-    }
-
-    @BeforeEach
-    public void openSite() {
-        open(BASE_URL);
     }
 
     @AfterEach
