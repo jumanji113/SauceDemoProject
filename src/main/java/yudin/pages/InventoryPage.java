@@ -1,11 +1,13 @@
 package yudin.pages;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import yudin.constans.ItemEnum;
+import yudin.constans.SortOption;
 
 import java.time.Duration;
 import java.util.*;
@@ -17,8 +19,11 @@ public class InventoryPage {
     private SelenideElement logo = Selenide.$x("//div[@class='app_logo']");
     private SelenideElement actualCartItem = Selenide.$x("//span[@data-test='shopping-cart-badge']");
     private SelenideElement cartButton = Selenide.$x("//a[@class='shopping_cart_link']");
+    private SelenideElement sortOptions = Selenide.$x("//select[@data-test='product-sort-container']");
+    private ElementsCollection inventoryItems = Selenide.$$x("//div[@class='inventory_item']");
 
     private Map<ItemEnum, SelenideElement> itemLocators = new HashMap<>();
+    private Map<SortOption, SelenideElement> sortLocators = new HashMap<>();
 
     public InventoryPage() {
         itemLocators.put(ItemEnum.BACKPACK, Selenide.$x("//img[@alt='Sauce Labs Backpack']/../../.."));
@@ -27,6 +32,11 @@ public class InventoryPage {
         itemLocators.put(ItemEnum.FLEECE_JACKET, Selenide.$x("//img[@alt='Sauce Labs Fleece Jacket']/../../.."));
         itemLocators.put(ItemEnum.ONESIE, Selenide.$x("//img[@alt='Sauce Labs Onesie']/../../.."));
         itemLocators.put(ItemEnum.T_SHIRT_RED, Selenide.$x("//img[@alt='Test.allTheThings() T-Shirt (Red)']/../../.."));
+
+        sortLocators.put(SortOption.NAMEATOZ, Selenide.$x("//option[@value='az']"));
+        sortLocators.put(SortOption.NAMEZTOA, Selenide.$x("//option[@value='za']"));
+        sortLocators.put(SortOption.PRICEASC, Selenide.$x("//option[@value='lohi']"));
+        sortLocators.put(SortOption.PRICEDESC, Selenide.$x("//option[@value='hilo']"));
     }
 
     @Step
@@ -58,6 +68,28 @@ public class InventoryPage {
         //Возвращаем созданную мапу
         return itemsPrice;
     }
+
+    @Step("Получение списка всех товаров")
+    public Map<String, String> getAllInventory(){
+        Map<String, String> allItemsInventory = new LinkedHashMap<>();
+        for (int i = 0; i < inventoryItems.size(); i++) {
+            //Получаем название товара
+            String nameItem = Selenide.$$x("//div[@data-test='inventory-item-name']").get(i).getText();
+            //Получаем цену товара
+            String priceItem = Selenide.$$x("//div[@class='inventory_item_price']").get(i).getText().substring(1);
+            //Добавляем в мапу название и цену предмета
+            allItemsInventory.put(nameItem, priceItem);
+        }
+        return allItemsInventory;
+    }
+
+
+    @Step("сортировка предметов")
+    public InventoryPage sortItems(SortOption sortOptionValue){
+        sortOptions.selectOption(sortLocators.get(sortOptionValue).getText());
+        return this;
+    }
+
 
     @Step("Генерируем рандомные индексы")
     //Генерируем рандомные индексы, 1 - 6 штук
