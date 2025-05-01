@@ -3,8 +3,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import yudin.pages.CartPage;
-import yudin.pages.MainPage;
+import yudin.pages.InventoryPage;
 import yudin.pages.SignUpPage;
+
+import java.util.Map;
 
 public class FirstTest extends BaseTest {
 
@@ -44,20 +46,45 @@ public class FirstTest extends BaseTest {
                 .randomItemAddToCart();
     }
 
+//    @Test
+//    @DisplayName("Проверка добавления рандомного элемента в корзину и подсчета суммы в mainPage и сравнение с корзиной")
+//    public void checkAddToCartAndCompare() {
+//        new SignUpPage()
+//                .setData(LOGIN, PASS)
+//                .clickButtonSignUp();
+//        MainPage mainPage = new MainPage();
+//        String expectedPriceItemOneInMainPage = mainPage.randomItemAddToCart();
+//        String expectedPriceItemTwoInMainPage = mainPage.randomItemAddToCart();
+//        Double sumInMainPage = Double.parseDouble(expectedPriceItemOneInMainPage) + Double.parseDouble(expectedPriceItemTwoInMainPage);
+//        mainPage.clickCartButton();
+//        CartPage cartPage = new CartPage();
+//        Double actualSummInCart = cartPage.checkSummAllItems();
+//        Assertions.assertEquals(sumInMainPage, actualSummInCart);
+//    }
+
     @Test
     @DisplayName("Проверка добавления рандомного элемента в корзину и подсчета суммы в mainPage и сравнение с корзиной")
     public void checkAddToCartAndCompare() {
         new SignUpPage()
                 .setData(LOGIN, PASS)
                 .clickButtonSignUp();
-        MainPage mainPage = new MainPage();
-        String expectedPriceItemOneInMainPage = mainPage.randomItemAddToCart();
-        String expectedPriceItemTwoInMainPage = mainPage.randomItemAddToCart();
-        Double sumInMainPage = Double.parseDouble(expectedPriceItemOneInMainPage) + Double.parseDouble(expectedPriceItemTwoInMainPage);
-        mainPage.clickCartButton();
+
+        InventoryPage inventoryPage = new InventoryPage();
+        Map<String, String> itemsPrice = inventoryPage.addItemsPrice(inventoryPage.generateUniqueRandomIndexes0To6());
+        System.out.println(itemsPrice);
+        System.out.println("____________");
+        inventoryPage.clickCartButton();
+
         CartPage cartPage = new CartPage();
-        Double actualSummInCart = cartPage.checkSummAllItems();
-        Assertions.assertEquals(sumInMainPage, actualSummInCart);
+        Map<String, String> itemsInCart = cartPage.checkItemsInCart();
+
+        Double itemsPriceInInventoryPage = itemsPrice.values().stream()
+                .mapToDouble(value -> Double.parseDouble(value)).sum();
+
+        Double cartPageSummItems = itemsInCart.values().stream()
+                .mapToDouble(value -> Double.parseDouble(value)).sum();
+
+        Assertions.assertEquals(itemsPriceInInventoryPage, cartPageSummItems);
     }
 
 }
