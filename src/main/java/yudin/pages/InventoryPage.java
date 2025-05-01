@@ -9,8 +9,10 @@ import yudin.constans.ItemEnum;
 
 import java.time.Duration;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-public class MainPage {
+public class InventoryPage {
 
     private SelenideElement logo = Selenide.$x("//div[@class='app_logo']");
     private SelenideElement actualCartItem = Selenide.$x("//span[@data-test='shopping-cart-badge']");
@@ -18,7 +20,7 @@ public class MainPage {
 
     private Map<ItemEnum, SelenideElement> itemLocators = new HashMap<>();
 
-    public MainPage() {
+    public InventoryPage() {
         itemLocators.put(ItemEnum.BACKPACK, Selenide.$x("//img[@alt='Sauce Labs Backpack']/../../.."));
         itemLocators.put(ItemEnum.BIKE_LIGHT, Selenide.$x("//img[@alt='Sauce Labs Bike Light']/../../.."));
         itemLocators.put(ItemEnum.BOLT_TSHIRT, Selenide.$x("//img[@alt='Sauce Labs Bolt T-Shirt']/../../.."));
@@ -28,12 +30,49 @@ public class MainPage {
     }
 
     @Step
-    public String randomItemAddToCart(){
+    public String randomItemAddToCart() {
         List<Map.Entry<ItemEnum, SelenideElement>> entries = new ArrayList<>(itemLocators.entrySet());
         Random random = new Random();//класс рандом инициализируем
         int randomIndex = random.nextInt(entries.size());//получаем рандомное число по размеру листа
         clickAddButtonToCart(entries.get(randomIndex).getKey());//кликаем на кнопку добавить
         return getPriceItems(entries.get(randomIndex).getKey()).substring(1);//получаем строчку, которую в mainpage преобразуем в double, можно исправить
+    }
+
+    @Step("добавление элемента")
+    public Map<String, String> addItemsPrice(List<Integer> indexToAdd) { //Тут например у нас индексы 5,3,1, общий их размер 3, цикл будет 3 раза
+        //Создали мапу для названия предмета и его цены
+        Map<String, String> itemsPrice = new HashMap<>();
+        //Идём по циклу столько раз, сколько до этого получили значений, в нашем случае 3
+        for (int i = 0; i < indexToAdd.size(); i++) {
+            //Берём рандомный индекс, который получили ранее из метода generateUniqueRandomIndexes0To6(3)
+            int randomIndex = indexToAdd.get(i);
+            //Получаем название товара
+            String nameItem = Selenide.$$x("//div[@data-test='inventory-item']//img").get(randomIndex).getAttribute("alt");
+            //Получаем цену товара
+            String priceItem = Selenide.$$x("//div[@data-test='inventory-item']//div[@class='inventory_item_price']").get(randomIndex).getText().substring(1);
+            //Добавляем в мапу название и цену предмета
+            itemsPrice.put(nameItem, priceItem);
+            //Добавляем в корзину этот предмет
+            Selenide.$$x("//*[@data-test='inventory-item']//button").get(randomIndex).click();
+        }
+        //Возвращаем созданную мапу
+        return itemsPrice;
+    }
+
+    @Step("Генерируем рандомные индексы")
+    //Генерируем рандомные индексы, 1 - 6 штук
+    public List<Integer> generateUniqueRandomIndexes0To6() {
+        List<Integer> indexes = IntStream.range(0, 6)
+                .boxed()
+                .collect(Collectors.toList());
+
+        Collections.shuffle(indexes); //Перемешали
+        // Такой принцип, что как будто мы положили в коробку 6 предметов
+        // И всегда в разной последовательности, а после берём количество индексов необходимое,
+        // Например мы положили 5,3,0,1,2,4 в коробку и дальше берём count, например count = 3, берём первые 5,3,0
+        int count = new Random().nextInt(1, 5);
+        return indexes.subList(0, count);
+        // берём рандомное значение от 0 до 6, т.е. всегда будет разное значение добавленных товаров
     }
 
     @Step("Получение цены {itemEnum}")
@@ -59,14 +98,14 @@ public class MainPage {
     }
 
     @Step("Проверка лого сайта")
-    public MainPage checkLogo(String expectedLogo) {
+    public InventoryPage checkLogo(String expectedLogo) {
         String actualLogo = logo.getText().trim();
         Assertions.assertEquals(expectedLogo, actualLogo);
         return this;
     }
 
     @Step("Проверка начального состояния корзины")
-    public MainPage checkInitialStateCart() {
+    public InventoryPage checkInitialStateCart() {
         if (!actualCartItem.exists()) {
             System.out.println("Элемент счетчик отсутствует на странице. Продолжение теста...");
             return this;
@@ -80,7 +119,7 @@ public class MainPage {
     }
 
     @Step("Обновления счетчика корзины и добавление элементов")
-    public MainPage checkCounterCart(ItemEnum itemEnum) {
+    public InventoryPage checkCounterCart(ItemEnum itemEnum) {
         SelenideElement button = itemLocators.get(itemEnum);
         if (button == null) {
             throw new IllegalArgumentException("Элемент не найден");

@@ -45,9 +45,9 @@ public class SignUpPage {
     }
 
     @Step("Нажатие кнопки login")
-    public MainPage clickButtonSignUp() {
+    public InventoryPage clickButtonSignUp() {
         signUpButton.click();
-        return Selenide.page(MainPage.class);
+        return Selenide.page(InventoryPage.class);
     }
 
 }
