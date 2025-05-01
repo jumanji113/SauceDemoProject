@@ -71,8 +71,7 @@ public class FirstTest extends BaseTest {
 
         InventoryPage inventoryPage = new InventoryPage();
         Map<String, String> itemsPrice = inventoryPage.addItemsPrice(inventoryPage.generateUniqueRandomIndexes0To6());
-        System.out.println(itemsPrice);
-        System.out.println("____________");
+
         inventoryPage.clickCartButton();
 
         CartPage cartPage = new CartPage();

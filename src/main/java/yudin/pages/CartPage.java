@@ -23,7 +23,7 @@ public class CartPage {
     }
 
     @Step("Получение предметов в корзине")
-    public Map<String, String> checkItemsInCart(){
+    public Map<String, String> checkItemsInCart() {
         Map<String, String> itemsInCart = new HashMap<>();
         for (int i = 0; i < itemsCollectionInCart.size(); i++) {
             //получаем имя товара из корзины
@@ -35,7 +35,6 @@ public class CartPage {
         }
         return itemsInCart;
     }
-
 
 //    @Step("Проверка суммы элементов в корзине")
 //    public double checkSummAllItems() {
