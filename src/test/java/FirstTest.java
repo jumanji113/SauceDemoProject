@@ -7,10 +7,7 @@ import yudin.pages.CartPage;
 import yudin.pages.InventoryPage;
 import yudin.pages.SignUpPage;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -59,22 +56,6 @@ public class FirstTest extends BaseTest {
 
     }
 
-//    @Test
-//    @DisplayName("Проверка добавления рандомного элемента в корзину и подсчета суммы в mainPage и сравнение с корзиной")
-//    public void checkAddToCartAndCompare() {
-//        new SignUpPage()
-//                .setData(LOGIN, PASS)
-//                .clickButtonSignUp();
-//        MainPage mainPage = new MainPage();
-//        String expectedPriceItemOneInMainPage = mainPage.randomItemAddToCart();
-//        String expectedPriceItemTwoInMainPage = mainPage.randomItemAddToCart();
-//        Double sumInMainPage = Double.parseDouble(expectedPriceItemOneInMainPage) + Double.parseDouble(expectedPriceItemTwoInMainPage);
-//        mainPage.clickCartButton();
-//        CartPage cartPage = new CartPage();
-//        Double actualSummInCart = cartPage.checkSummAllItems();
-//        Assertions.assertEquals(sumInMainPage, actualSummInCart);
-//    }
-
     @Test
     @DisplayName("Проверка добавления рандомного элемента в корзину и подсчета суммы в mainPage и сравнение с корзиной")
     public void checkAddToCartAndCompare() {
@@ -92,7 +73,6 @@ public class FirstTest extends BaseTest {
 
         Double itemsPriceInInventoryPage = itemsPrice.values().stream()
                 .mapToDouble(value -> Double.parseDouble(value)).sum();
-
         Double cartPageSummItems = itemsInCart.values().stream()
                 .mapToDouble(value -> Double.parseDouble(value)).sum();
 
@@ -108,27 +88,17 @@ public class FirstTest extends BaseTest {
                 .clickButtonSignUp();
 
         InventoryPage inventoryPage = new InventoryPage();
-        Map<String, String> initialInventory = inventoryPage.getAllInventory();
-        System.out.println(initialInventory);
-        inventoryPage.sortItems(SortOption.NAMEZTOA);
-        Map<String, String> actualInventory = inventoryPage.getAllInventory();
-        System.out.println(actualInventory);
 
-        //Преобразуем мапу в список
-        List<Map.Entry<String, String>> initialList = new ArrayList<>(initialInventory.entrySet());
-        System.out.println(initialList);
-        List<Map.Entry<String, String>> actualList = new ArrayList<>(actualInventory.entrySet());
-        System.out.println(actualList);
+        //Получения списков до и после изменения
+        LinkedList<String> initialInventory = inventoryPage.getAllTitleInventory();
+        inventoryPage.sortItems(SortOption.NAMEZTOA);
+        LinkedList<String> actualInventory = inventoryPage.getAllTitleInventory();
 
         //Получение 1 элемента изначального списка и получение последнего элемента после сортировки
-        Map.Entry<String, String> firstElementInitialList = initialList.get(0);
-        System.out.println(firstElementInitialList);
-        Map.Entry<String, String> lastElementActualList = actualList.get(actualList.size() - 1);
-        System.out.println(lastElementActualList);
+        String firstElementInitialList = initialInventory.get(0);
+        String lastElementActualList = actualInventory.get(actualInventory.size() - 1);
 
-        Assertions.assertEquals(firstElementInitialList.getKey(), lastElementActualList.getKey(),
-                "Сравнение ключей первого элемента изначального списка и последнего элемента актуального списка");
-        Assertions.assertEquals(firstElementInitialList.getValue(), lastElementActualList.getValue(),
+        Assertions.assertEquals(firstElementInitialList, lastElementActualList,
                 "Сравнение значений первого элемента изначального списка и последнего элемента актуального списка");
 
     }
@@ -141,13 +111,16 @@ public class FirstTest extends BaseTest {
                 .clickButtonSignUp();
 
         InventoryPage inventoryPage = new InventoryPage();
-        List<String> initAllInventoryItemPrices = inventoryPage.getAllPriceInventory();
-        assertTrue(listItemsPricesInit.equals(initAllInventoryItemPrices), "Не совпал инициализируйщий массив");
+        LinkedList<String> initAllInventoryItemPrices = inventoryPage.getAllPriceInventory();
+        assertTrue(listItemsPricesInit.equals(initAllInventoryItemPrices),
+                "Не совпал инициализируйщий список по-умолчанию");
 
         inventoryPage.sortItems(SortOption.PRICEDESC);
-        List<String> actualInventoryItemPrices = inventoryPage.getAllPriceInventory();
+        LinkedList<String> actualInventoryItemPrices = inventoryPage.getAllPriceInventory();
         System.out.println(actualInventoryItemPrices);
-        assertTrue(listItemsPricesHighToLow.equals(actualInventoryItemPrices), "Не совпал массив по убыванию");
+
+        assertTrue(listItemsPricesHighToLow.equals(actualInventoryItemPrices),
+                "Не совпал список по убыванию полученый в тесте и сохраненный изначально");
 
     }
 
