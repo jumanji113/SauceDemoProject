@@ -8,8 +8,11 @@ import yudin.pages.InventoryPage;
 import yudin.pages.SignUpPage;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FirstTest extends BaseTest {
 
@@ -19,6 +22,11 @@ public class FirstTest extends BaseTest {
     private final static String FIRST_NAME = "Alexey";
     private final static String LAST_NAME = "Jumanji";
     private final static int ZIP_CODE = 214031;
+    //добавил изначальный список элементов
+    private final static List<String> listItemsPricesInit = List.of("29.99", "9.99", "15.99", "49.99", "7.99", "15.99");
+    private final static List<String> listItemsPricesHighToLow = listItemsPricesInit.stream()
+            .sorted((s1, s2) -> Double.compare(Double.parseDouble(s2), Double.parseDouble(s1)))
+            .toList();
 
     @Test
     @DisplayName("Вход на страницу, и ввод логина и пароля")
@@ -133,19 +141,13 @@ public class FirstTest extends BaseTest {
                 .clickButtonSignUp();
 
         InventoryPage inventoryPage = new InventoryPage();
-        Map<String, String> initialInventory = inventoryPage.getAllInventory();
+        List<String> initAllInventoryItemPrices = inventoryPage.getAllPriceInventory();
+        assertTrue(listItemsPricesInit.equals(initAllInventoryItemPrices), "Не совпал 1 массив");
+
         inventoryPage.sortItems(SortOption.PRICEDESC);
-        Map<String, String> actualInventory = inventoryPage.getAllInventory();
-
-        //Преобразуем мапу в список
-        List<Map.Entry<String, String>> initialList = new ArrayList<>(initialInventory.entrySet());
-        List<Map.Entry<String, String>> actualList = new ArrayList<>(actualInventory.entrySet());
-
-        List<Double> listActualItemsPrices = actualList.stream().map(entry -> Double.parseDouble(entry.getValue())).toList();
-        for (int i = 0; i < listActualItemsPrices.size() - 1; i++) {
-            Assertions.assertTrue(listActualItemsPrices.get(i) >= listActualItemsPrices.get(i + 1),
-                    "список не отсортирован по убыванию");
-        }
+        List<String> actualInventoryItemPrices = inventoryPage.getAllPriceInventory();
+        System.out.println(actualInventoryItemPrices);
+        assertTrue(listItemsPricesHighToLow.equals(actualInventoryItemPrices), "Не совпал массив по убыванию");
 
     }
 
