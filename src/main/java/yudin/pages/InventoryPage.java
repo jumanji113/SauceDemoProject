@@ -21,6 +21,7 @@ public class InventoryPage {
     private SelenideElement cartButton = Selenide.$x("//a[@class='shopping_cart_link']");
     private SelenideElement sortOptions = Selenide.$x("//select[@data-test='product-sort-container']");
     private ElementsCollection inventoryItems = Selenide.$$x("//div[@class='inventory_item']");
+    private ElementsCollection inventoryItemsPrices = Selenide.$$x("//div[@data-test='inventory-item-price']");
 
     private Map<ItemEnum, SelenideElement> itemLocators = new HashMap<>();
     private Map<SortOption, SelenideElement> sortLocators = new HashMap<>();
@@ -81,6 +82,16 @@ public class InventoryPage {
             allItemsInventory.put(nameItem, priceItem);
         }
         return allItemsInventory;
+    }
+    
+    @Step("Получение цены всех элементов на странице")
+    public List<String> getAllPriceInventory(){
+        List<String> allItemsPrice = new ArrayList<>();
+        for (int i = 0; i < inventoryItemsPrices.size(); i++) {
+            String priceItem = inventoryItemsPrices.get(i).getText().substring(1);
+            allItemsPrice.add(priceItem);
+        }
+        return allItemsPrice;
     }
 
 
