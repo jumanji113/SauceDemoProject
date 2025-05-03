@@ -20,7 +20,7 @@ public class InventoryPage {
     private SelenideElement actualCartItem = Selenide.$x("//span[@data-test='shopping-cart-badge']");
     private SelenideElement cartButton = Selenide.$x("//a[@class='shopping_cart_link']");
     private SelenideElement sortOptions = Selenide.$x("//select[@data-test='product-sort-container']");
-    private ElementsCollection inventoryItems = Selenide.$$x("//div[@class='inventory_item']");
+    private ElementsCollection inventoryItemsTitle = Selenide.$$x("//div[@data-test='inventory-item-name']");
     private ElementsCollection inventoryItemsPrices = Selenide.$$x("//div[@data-test='inventory-item-price']");
 
     private Map<ItemEnum, SelenideElement> itemLocators = new HashMap<>();
@@ -70,23 +70,19 @@ public class InventoryPage {
         return itemsPrice;
     }
 
-    @Step("Получение списка всех товаров")
-    public Map<String, String> getAllInventory(){
-        Map<String, String> allItemsInventory = new LinkedHashMap<>();
-        for (int i = 0; i < inventoryItems.size(); i++) {
-            //Получаем название товара
-            String nameItem = Selenide.$$x("//div[@data-test='inventory-item-name']").get(i).getText();
-            //Получаем цену товара
-            String priceItem = Selenide.$$x("//div[@class='inventory_item_price']").get(i).getText().substring(1);
-            //Добавляем в мапу название и цену предмета
-            allItemsInventory.put(nameItem, priceItem);
+    @Step("Получение заголовка всех элементов на странице")
+    public LinkedList<String> getAllTitleInventory(){
+        LinkedList<String> allItemsTitle = new LinkedList<>();
+        for (int i = 0; i < inventoryItemsTitle.size(); i++) {
+            String priceItem = inventoryItemsTitle.get(i).getText();
+            allItemsTitle.add(priceItem);
         }
-        return allItemsInventory;
+        return allItemsTitle;
     }
     
     @Step("Получение цены всех элементов на странице")
-    public List<String> getAllPriceInventory(){
-        List<String> allItemsPrice = new ArrayList<>();
+    public LinkedList<String> getAllPriceInventory(){
+        LinkedList<String> allItemsPrice = new LinkedList<>();
         for (int i = 0; i < inventoryItemsPrices.size(); i++) {
             String priceItem = inventoryItemsPrices.get(i).getText().substring(1);
             allItemsPrice.add(priceItem);
