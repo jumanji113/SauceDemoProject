@@ -142,7 +142,7 @@ public class FirstTest extends BaseTest {
 
         InventoryPage inventoryPage = new InventoryPage();
         List<String> initAllInventoryItemPrices = inventoryPage.getAllPriceInventory();
-        assertTrue(listItemsPricesInit.equals(initAllInventoryItemPrices), "Не совпал 1 массив");
+        assertTrue(listItemsPricesInit.equals(initAllInventoryItemPrices), "Не совпал инициализируйщий массив");
 
         inventoryPage.sortItems(SortOption.PRICEDESC);
         List<String> actualInventoryItemPrices = inventoryPage.getAllPriceInventory();
