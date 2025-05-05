@@ -5,7 +5,6 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
-import org.junit.jupiter.api.Assertions;
 import yudin.constans.ItemEnum;
 import yudin.constans.SortOption;
 
@@ -13,6 +12,8 @@ import java.time.Duration;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class InventoryPage {
 
@@ -27,12 +28,18 @@ public class InventoryPage {
     private Map<SortOption, SelenideElement> sortLocators = new HashMap<>();
 
     public InventoryPage() {
-        itemLocators.put(ItemEnum.BACKPACK, Selenide.$x("//img[@alt='Sauce Labs Backpack']/../../.."));
-        itemLocators.put(ItemEnum.BIKE_LIGHT, Selenide.$x("//img[@alt='Sauce Labs Bike Light']/../../.."));
-        itemLocators.put(ItemEnum.BOLT_TSHIRT, Selenide.$x("//img[@alt='Sauce Labs Bolt T-Shirt']/../../.."));
-        itemLocators.put(ItemEnum.FLEECE_JACKET, Selenide.$x("//img[@alt='Sauce Labs Fleece Jacket']/../../.."));
-        itemLocators.put(ItemEnum.ONESIE, Selenide.$x("//img[@alt='Sauce Labs Onesie']/../../.."));
-        itemLocators.put(ItemEnum.T_SHIRT_RED, Selenide.$x("//img[@alt='Test.allTheThings() T-Shirt (Red)']/../../.."));
+        itemLocators.put(ItemEnum.BACKPACK,
+                Selenide.$x("//img[@alt='Sauce Labs Backpack']/../../.."));
+        itemLocators.put(ItemEnum.BIKE_LIGHT,
+                Selenide.$x("//img[@alt='Sauce Labs Bike Light']/../../.."));
+        itemLocators.put(ItemEnum.BOLT_TSHIRT,
+                Selenide.$x("//img[@alt='Sauce Labs Bolt T-Shirt']/../../.."));
+        itemLocators.put(ItemEnum.FLEECE_JACKET,
+                Selenide.$x("//img[@alt='Sauce Labs Fleece Jacket']/../../.."));
+        itemLocators.put(ItemEnum.ONESIE,
+                Selenide.$x("//img[@alt='Sauce Labs Onesie']/../../.."));
+        itemLocators.put(ItemEnum.T_SHIRT_RED,
+                Selenide.$x("//img[@alt='Test.allTheThings() T-Shirt (Red)']/../../.."));
 
         sortLocators.put(SortOption.NAMEATOZ, Selenide.$x("//option[@value='az']"));
         sortLocators.put(SortOption.NAMEZTOA, Selenide.$x("//option[@value='za']"));
@@ -71,7 +78,7 @@ public class InventoryPage {
     }
 
     @Step("Получение заголовка всех элементов на странице")
-    public LinkedList<String> getAllTitleInventory(){
+    public LinkedList<String> getAllTitleInventory() {
         LinkedList<String> allItemsTitle = new LinkedList<>();
         for (int i = 0; i < inventoryItemsTitle.size(); i++) {
             String priceItem = inventoryItemsTitle.get(i).getText();
@@ -79,9 +86,9 @@ public class InventoryPage {
         }
         return allItemsTitle;
     }
-    
+
     @Step("Получение цены всех элементов на странице")
-    public LinkedList<String> getAllPriceInventory(){
+    public LinkedList<String> getAllPriceInventory() {
         LinkedList<String> allItemsPrice = new LinkedList<>();
         for (int i = 0; i < inventoryItemsPrices.size(); i++) {
             String priceItem = inventoryItemsPrices.get(i).getText().substring(1);
@@ -92,14 +99,13 @@ public class InventoryPage {
 
 
     @Step("сортировка предметов")
-    public InventoryPage sortItems(SortOption sortOptionValue){
+    public InventoryPage sortItems(SortOption sortOptionValue) {
         sortOptions.selectOption(sortLocators.get(sortOptionValue).getText());
         return this;
     }
 
 
     @Step("Генерируем рандомные индексы")
-    //Генерируем рандомные индексы, 1 - 6 штук
     public List<Integer> generateUniqueRandomIndexes0To6() {
         List<Integer> indexes = IntStream.range(0, 6)
                 .boxed()
@@ -111,7 +117,6 @@ public class InventoryPage {
         // Например мы положили 5,3,0,1,2,4 в коробку и дальше берём count, например count = 3, берём первые 5,3,0
         int count = new Random().nextInt(1, 5);
         return indexes.subList(0, count);
-        // берём рандомное значение от 0 до 6, т.е. всегда будет разное значение добавленных товаров
     }
 
     @Step("Получение цены {itemEnum}")
@@ -139,7 +144,7 @@ public class InventoryPage {
     @Step("Проверка лого сайта")
     public InventoryPage checkLogo(String expectedLogo) {
         String actualLogo = logo.getText().trim();
-        Assertions.assertEquals(expectedLogo, actualLogo);
+        assertEquals(expectedLogo, actualLogo);
         return this;
     }
 
@@ -153,7 +158,7 @@ public class InventoryPage {
         // Если элемент существует, проверяем его текст
         String initialCounterText = actualCartItem.getText();
         int initialCounter = initialCounterText.isEmpty() ? 0 : Integer.parseInt(initialCounterText);
-        Assertions.assertEquals(0, initialCounter, "Корзина не пуста перед началом теста");
+        assertEquals(0, initialCounter, "Корзина не пуста перед началом теста");
         return this;
     }
 
@@ -183,7 +188,7 @@ public class InventoryPage {
         String actualCounterText = actualCartItem.getText();
         int actualCounter = actualCounterText.isEmpty() ? 0 : Integer.parseInt(actualCounterText);
         // Проверяем, что счетчик обновился
-        Assertions.assertEquals(expectedCounter, actualCounter, "Счетчик корзины не обновился");
+        assertEquals(expectedCounter, actualCounter, "Счетчик корзины не обновился");
         return this;
     }
 
@@ -192,5 +197,4 @@ public class InventoryPage {
         cartButton.click();
         return Selenide.page(CartPage.class);
     }
-
 }

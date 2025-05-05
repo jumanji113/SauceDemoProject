@@ -6,12 +6,12 @@ import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 
-public class CheckOutPage {
+public class CheckStepTwo {
     private ElementsCollection itemsPriceCollection = Selenide.$$x("//div[@class='inventory_item_price']");
     private SelenideElement allTotalSumm = Selenide.$x("//div[@data-test='subtotal-label']");
 
     @Step("Получение суммы всех предметов в корзине и проверка с итоговой суммой")
-    public CheckOutPage checkSummItems() {
+    public CheckStepTwo checkSummItems() {
         int totalSum = itemsPriceCollection.stream()
                 .map(element -> element.getText()) // Получаем текст каждого элемента
                 .mapToInt(text -> {
